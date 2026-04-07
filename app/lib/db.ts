@@ -44,3 +44,30 @@ export async function loginUser(username: string, password: string): Promise<Use
         return null;
     }
 }
+
+
+export async function findUser(username: string, password: string): Promise<User | null> {
+    try {
+        const userid = await sql`
+        SELECT id FROM users WHERE username =${username} AND password = ${password}`;
+        if (userid.rows.length === 0) {
+            return null;
+        } else {
+            return userid.rows[0] as User;
+        }
+    }
+    catch (err) {
+        console.error("Login failed", err);
+        return null;
+    }
+}
+
+export async function deleteUser(userid: string) {
+    try {
+        await sql`DELETE FROM user WHERE id = ${userid}`;
+    }
+    catch (err) {
+        console.error("Deletion Failed", err);
+        return null;
+    }
+}
