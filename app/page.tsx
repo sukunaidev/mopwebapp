@@ -1,34 +1,62 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { use } from 'react';
 import Image from "next/image";
 import "./globals.css";
 import { clearTimeout } from "timers";
 import { sign } from "crypto";
+import Link from 'next/link';
+
+import { useRouter } from "next/navigation";
 
 
+type User = {
+  username: string;
+  email: string;
+  password: string;
+
+};
 
 
-function signUpForm() {
-
+export function SignUpForm({ setIsLoggedIn }: { setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  let handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  let handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     alert(username + " email " + email + " password " + password);
 
     console.log(username, email, password);
+
+    const res = await fetch("/api/auth/sign-up", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        email,
+        password
+      })
+    });
+
+    if (res.ok) { // 20x status code = OK
+      const data = await res.json() as { success: boolean };
+      console.log("did success:", data.success)
+      setUsername(username);
+      setEmail(email);
+      setPassword(password);
+      setIsLoggedIn(true);
+    }
+
   }
 
   let handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value)
-
   }
   let handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
-
   }
 
   let handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,17 +71,33 @@ function signUpForm() {
     handleUsernameChange,
     handleEmailChange,
     handlePasswordChange,
-
   };
 }
 
-function logInForm() {
+function logInForm({ setIsLoggedIn }: { setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  let handleLoginSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  let handleLoginSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Login user " + loginUsername + " login password " + loginPassword)
+    const res = await fetch("/api/auth/sign-up", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        email,
+        password
+      })
+    });
+
+    if (res.ok) { // 20x status code = OK
+      const data = await res.json() as { success: boolean };
+      console.log("did success:", data.success)
+      setUsername(username);
+      setEmail(email);
+      setPassword(password);
+      setIsLoggedIn(true);
+    }
 
   }
 
@@ -71,23 +115,13 @@ function logInForm() {
     handleLogInUsernameChange,
     handleLogInPasswordChange,
   };
-
-
 }
 
 
-
-
-
-
-
-
 export default function Home() {
-
-
-  //Imports from signup function
-  const { username, email, password, handleSubmit, handleUsernameChange, handleEmailChange, handlePasswordChange } = signUpForm();
-  const { loginUsername, loginPassword, handleLoginSubmit, handleLogInUsernameChange, handleLogInPasswordChange } = logInForm();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { username, email, password, handleSubmit, handleUsernameChange, handleEmailChange, handlePasswordChange } = SignUpForm({ setIsLoggedIn });
+  const { loginUsername, loginPassword, handleLoginSubmit, handleLogInUsernameChange, handleLogInPasswordChange } = logInForm({ setIsLoggedIn });
 
   const [moved, setMoved] = useState(false);
   const [showInput, setShowInput] = useState(false);
@@ -102,11 +136,30 @@ export default function Home() {
       }, 300);
 
     }
-  },)
+  }, []);
 
 
 
-
+  // MAIN DASHBOARD CONTENT
+  // if (isLoggedIn) {
+  //   return (
+  //     <div className="text-center font-bold pt-40" >
+  //       <h1> Welcome to your user page!</h1>
+  //       <label>Username</label>
+  //       <input
+  //         defaultValue={username}
+  //         type="text"
+  //         className={`border border-gray-901 px-3 py-2 rounded w-48`}
+  //       />
+  //       <button
+  //         className={"bg-gray-500 text-white px-12 py-4 rounded-full cursor-pointer"}>
+  //         Update Username!
+  //       </button>
+  //       <br />
+  //       <label>Password</label>
+  //     </div>
+  //   )
+  // }
 
 
   return (
@@ -139,30 +192,21 @@ export default function Home() {
             setclickedSignUp(false)
             //setLogin(!logIn)
           }}
-
-
             className="bg-gray-500 text-white px-12 py-4 rounded-full cursor-pointer">Login</button>
         </div>
 
 
-
-
+        {/* SIGN UP FORM */}
         <div>
-
           <form onSubmit={handleSubmit}>
             <div className={`${showInput && clickedsignUp ? " w-120 bg-gray-400 rounded-full px-5 py-8 translate-x-220 -translate-y-45" : ""}`}>
 
 
               {(showInput && clickedsignUp) && (<p>Welcome to the Mop Creation App!</p>)}
               {(showInput && clickedsignUp) && (
-
                 <label htmlFor="username" className=" mb-1 text-sm  px-3 py-2 ">Username</label>
-
-
-
               )}
               {(showInput && clickedsignUp) &&
-
 
                 (
 
@@ -174,9 +218,6 @@ export default function Home() {
                     className={` mb-3 border border-gray-900 px-3 py-2 rounded w-48`}
                     value={username}
                     onChange={handleUsernameChange}
-
-
-
                   />
 
 
@@ -238,9 +279,13 @@ export default function Home() {
                 )}
                 {(showInput && clickedsignUp) &&
 
-                  (<button type="submit"
+                  (
 
-                    className="bg-gray-500 text-white px-12 py-4 rounded-full cursor-pointer" >Sign Up!</button>)}
+                    <button type="submit"
+
+                      className="bg-gray-500 text-white px-12 py-4 rounded-full cursor-pointer" >Sign Up!</button>
+
+                  )}
               </div>
 
 
@@ -248,6 +293,8 @@ export default function Home() {
           </form>
         </div>
 
+
+        {/* LOGIN FORM */}
         <div>
           <form onSubmit={handleLoginSubmit}>
             <div className={`${showInput && clickedlogIn ? " w-120 bg-gray-400 rounded-full px-5 py-8 translate-x-220 -translate-y-45" : ""}`} >
@@ -262,7 +309,6 @@ export default function Home() {
                     placeholder="username"
                     value={loginUsername}
                     onChange={handleLogInUsernameChange}
-
                   />
 
                   <br />
@@ -292,28 +338,7 @@ export default function Home() {
         </div>
 
 
-
-
-
-
-
-
-
-
-
       </div>
-
-
     </div >
-
-
-
-
-
-
-
   );
-
-
-
 }
