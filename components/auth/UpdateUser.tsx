@@ -44,7 +44,7 @@ function UpdateUser({ clickedUpdate }: Props) {
                     <input value={newUsername} onChange={handleNewUsernameChange}
                         type="text" className={` border border-gray-900 px-3 py-2 rounded w-48`}></input>
                     <br />
-                    <button type="submit" className="bg-red-500 text-white px-12 py-4 rounded-full cursor-pointer">Delete</button>
+                    <button type="submit" className="bg-green-500 text-white px-12 py-4 rounded-full cursor-pointer">Update Username!</button>
 
                 </form>
             </div>)
