@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
     showInput: boolean;
@@ -6,6 +7,8 @@ interface Props {
 }
 
 function SignUp({ clickedsignUp, showInput }: Props) {
+    const { signUp } = useUser();
+
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -27,24 +30,13 @@ function SignUp({ clickedsignUp, showInput }: Props) {
 
         console.log(username, email, password);
 
-        const res = await fetch("/api/auth/sign-up", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username,
-                email,
-                password
-            })
-        });
-
-        if (res.ok) { // 20x status code = OK
-            const data = await res.json() as { success: boolean };
-            console.log("did success:", data.success)
-            // setUsername(username);
-            // setEmail(email);
-            // setPassword(password);
-            // setIsLoggedIn(true);
+        try {
+            await signUp(username, email, password);
+        } catch (error) {
+            console.error("Error signing in:", error);
         }
+
+
     }
 
     return (

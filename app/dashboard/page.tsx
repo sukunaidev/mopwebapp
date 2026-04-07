@@ -2,10 +2,11 @@
 import { useState } from "react"
 import { text } from "stream/consumers"
 import { SignUpForm } from "../page";
+import { useUser } from "@/hooks/useUser"
 
 
 export default function Page() {
-
+    const { user } = useUser();
 
     const handleUserSubmit = (user: { username: string; email: string; password: string }) => {
         alert(user.username)
@@ -14,7 +15,7 @@ export default function Page() {
 
     return (
         <div>
-            <h1> Welcome to your user page!</h1>
+            <h1> Welcome {user?.username} to your user page!</h1>
             <label>Username</label>
             <input
 
