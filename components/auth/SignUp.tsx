@@ -26,7 +26,7 @@ function SignUp({ clickedsignUp, showInput }: Props) {
 
     let handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        alert(username + " email " + email + " password " + password);
+        //alert(username + " email " + email + " password " + password);
 
         console.log(username, email, password);
 
