@@ -51,6 +51,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setUser(data)
             router.push("/dashboard");
         }
+
+        if (!res.ok) {
+            console.error("Sign-in failed", res.status);
+            return;
+        }
     }
 
     const signUp = async (username: string, email: string, password: string) => {
