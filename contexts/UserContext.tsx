@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useState, ReactNode } from 'react';
 import { useRouter } from "next/navigation";
 import { Are_You_Serious } from 'next/font/google';
