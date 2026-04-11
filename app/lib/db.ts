@@ -1,5 +1,6 @@
 import { sql } from "@vercel/postgres";
 import { User } from "@/contexts/UserContext";
+export const runtime = "nodejs";
 
 export async function createUser(username: string, email: string, password: string): Promise<User | null> {
     try {
@@ -17,7 +18,7 @@ export async function createUser(username: string, email: string, password: stri
         }
     } catch (err) {
         console.error("Insert failed", err);
-        return null;
+        throw err;
     }
 }
 
