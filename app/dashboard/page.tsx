@@ -7,7 +7,7 @@ import UserSettings from "@/components/dashboard/UserSettings";
 import DeleteUser from "@/components/auth/DeleteUser";
 
 export default function Page() {
-    const { user } = useUser();
+    //   const { user } = useUser();
     const [clickedDelete, setClickedDelete] = useState(false);
 
 
