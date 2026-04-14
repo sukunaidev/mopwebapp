@@ -18,7 +18,7 @@ export default function CreateMopPage() {
         e.preventDefault()
 
         try {
-            await createMop(user?.username, mopName, mopHeadType, mopShaftType, mopDesignType);
+            await createMop(mopName, mopHeadType, mopShaftType, mopDesignType, user?.username);
         } catch (error) {
             console.error("Creating Mop has failed:", error);
         }
